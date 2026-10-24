@@ -1,0 +1,224 @@
+<h2>Project Task Manager</h2>
+
+<!-- Step 3: Conditional Display Using @if -->
+<h3>Conditional Display Using If</h3>
+
+@if (true) {
+  <p>This task is displayed because the condition is true.</p>
+}
+
+@if (false) {
+  <p>This task is not displayed because the condition is false.</p>
+}
+
+<hr>
+
+<h3>Task Completion Status</h3>
+
+<p>Task: {{ taskName }}</p>
+
+@if (taskCompleted == true) {
+  <p>Task has been completed.</p>
+}
+
+@if (taskCompleted == false) {
+  <p>Task is still pending.</p>
+}
+
+<!-- Step 4: Conditional Display Using @else -->
+<hr>
+
+<h3>Conditional Display Using If-Else</h3>
+
+@if (taskCompleted) {
+  <p>Project task is completed.</p>
+} @else {
+  <p>Project task is still pending.</p>
+}
+
+<!-- Step 5: Change Task Status Using a Button -->
+<hr>
+
+<h3>Change Task Status Using a Button</h3>
+
+<p>Task: {{ taskName }}</p>
+
+@if (taskCompleted) {
+  <p>Current Status: Completed</p>
+} @else {
+  <p>Current Status: Pending</p>
+}
+
+<button (click)="taskCompleted = !taskCompleted">
+  Toggle Task Status
+</button>
+
+<!-- Step 6: Dynamic Button Text Using a Ternary Expression -->
+<hr>
+
+<h3>Dynamic Button Text Using Ternary Expression</h3>
+
+<p>Task: {{ taskName }}</p>
+
+@if (taskCompleted) {
+  <p>Current Status: Completed</p>
+} @else {
+  <p>Current Status: Pending</p>
+}
+
+<button (click)="taskCompleted = !taskCompleted">
+  {{ taskCompleted ? 'Mark as Pending' : 'Mark as Completed' }}
+</button>
+
+<!-- Step 7: Multiple Conditions Using @switch -->
+<hr>
+
+<h3>Task Status Using Switch</h3>
+
+<!-- Step 8: User Selection Using ngModel -->
+<label for="taskStatus">Select Task Status:</label>
+
+<select id="taskStatus" [(ngModel)]="taskStatus">
+  <option value="Not Started">Not Started</option>
+  <option value="In Progress">In Progress</option>
+  <option value="Completed">Completed</option>
+</select>
+
+<p>Task: {{ taskName }}</p>
+
+<p>Current Task Status: {{ taskStatus }}</p>
+
+@switch (taskStatus) {
+  @case ('Not Started') {
+    <p>The task has not started yet.</p>
+  }
+  @case ('In Progress') {
+    <p>The team is currently working on this task.</p>
+  }
+  @case ('Completed') {
+    <p>The task has been successfully completed.</p>
+  }
+  @default {
+    <p>Unknown task status.</p>
+  }
+}
+
+<!-- Step 9: Display Project Tasks Using @for -->
+<hr>
+
+<h3>Display Project Tasks Using For Loop</h3>
+
+<ul>
+  @for (task of tasks; track $index; let i = $index) {
+    <li>{{ task }} (Index: {{ i }})</li>
+  }
+</ul>
+
+<!-- Step 10: Add New Project Tasks Dynamically -->
+<hr>
+
+<h3>Add New Project Tasks</h3>
+
+<label for="newTask">Enter a New Task:</label>
+
+<input type="text"
+       id="newTask"
+       [(ngModel)]="newTask"
+       placeholder="Enter task name">
+
+<button (click)="addTask()">Add Task</button>
+
+<h4>Project Task List</h4>
+
+<ul>
+  @for (task of tasks; track $index; let i = $index) {
+    <li>{{ i + 1 }}. {{ task }}</li>
+  } @empty {
+    <li>No project tasks available.</li>
+  }
+</ul>
+
+<!-- Step 11: JSON Parsing and Displaying Team Members -->
+<hr>
+
+<h3>Display Project Team Members Using JSON</h3>
+
+<ul>
+  @for (member of teamMembers; track $index; let i = $index) {
+    <li>
+      {{ i + 1 }}.
+      {{ member.firstName }} {{ member.lastName }}
+    </li>
+  }
+</ul>
+
+<!-- Step 12: Understanding ng-template -->
+<hr>
+
+<h3>Displaying Content Using ng-template</h3>
+
+<p>Task: Prepare Project Documentation</p>
+
+<ng-template #reviewMessage>
+  <p>Project documentation is ready for review.</p>
+</ng-template>
+
+<button (click)="showReviewMessage = !showReviewMessage">
+  {{ showReviewMessage ? 'Hide Review Message' : 'Show Review Message' }}
+</button>
+
+@if (showReviewMessage) {
+  <ng-container [ngTemplateOutlet]="reviewMessage">
+  </ng-container>
+}
+
+<!-- Step 13: Attribute Directives - NgClass and NgStyle -->
+<hr>
+
+<h3>Changing Task Appearance Using Attribute Directives</h3>
+
+<p>Task: {{ taskName }}</p>
+
+<label for="taskAppearanceStatus">Select Task Status:</label>
+
+<select id="taskAppearanceStatus" [(ngModel)]="taskStatus">
+  <option value="Not Started">Not Started</option>
+  <option value="In Progress">In Progress</option>
+  <option value="Completed">Completed</option>
+</select>
+
+<h4>Example 1: NgClass</h4>
+
+<p [ngClass]="{
+  'status-completed': taskStatus === 'Completed',
+  'status-progress': taskStatus === 'In Progress',
+  'status-pending': taskStatus === 'Not Started'
+}">
+  Current Status: {{ taskStatus }}
+</p>
+
+<h4>Example 2: NgStyle</h4>
+
+<p [ngStyle]="{
+  'font-weight': 'bold',
+  'color': taskStatus === 'Completed' ? 'green' :
+           taskStatus === 'In Progress' ? 'orange' : 'red'
+}">
+  Current Status: {{ taskStatus }}
+</p>
+
+<!-- Steps 14-17: Custom Directive -->
+<hr>
+
+<h3>Custom Directive: Task Status Image</h3>
+
+<p>Task: {{ taskName }}</p>
+
+<p>Current Status: {{ taskStatus }}</p>
+
+<img
+  appTaskStatusImage
+  [taskStatus]="taskStatus"
+  alt="Project Task Status"
+  width="60"
+>

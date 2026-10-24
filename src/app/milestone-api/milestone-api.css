@@ -1,0 +1,15 @@
+:host {
+  display: block;
+  margin-top: 24px;
+}
+
+form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+button {
+  margin-top: 8px;
+}

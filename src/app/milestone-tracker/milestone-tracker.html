@@ -1,0 +1,15 @@
+<h2>Milestone Tracker</h2>
+
+<p>{{ completedCount }} of {{ milestones.length }} milestones completed.</p>
+
+<ul>
+  @for (milestone of milestones; track milestone.title) {
+    <li [class.done]="milestone.completed">
+      {{ milestone.title }} - Due: {{ milestone.dueDate }} -
+      {{ milestone.completed ? 'Completed' : 'Pending' }}
+      <button type="button" (click)="toggleMilestone(milestone)">
+        {{ milestone.completed ? 'Mark Pending' : 'Mark Complete' }}
+      </button>
+    </li>
+  }
+</ul>

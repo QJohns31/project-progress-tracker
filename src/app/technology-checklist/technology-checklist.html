@@ -1,0 +1,22 @@
+<h2>Technology Checklist</h2>
+
+<ul>
+  @for (tech of technologies; track tech.name) {
+    <li>
+      <label [class.learned]="tech.learned">
+        <input
+          type="checkbox"
+          [checked]="tech.learned"
+          (change)="toggleTechnology(tech, $event)">
+        {{ tech.name }} ({{ tech.layer }})
+      </label>
+    </li>
+  }
+</ul>
+
+<!-- Directives: show a different message depending on progress -->
+@if (learnedCount === technologies.length) {
+  <p class="learned">All technologies checked off!</p>
+} @else {
+  <p>{{ learnedCount }} of {{ technologies.length }} technologies checked off.</p>
+}

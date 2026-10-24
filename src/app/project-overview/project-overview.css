@@ -1,0 +1,11 @@
+.card {
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 12px 16px;
+  max-width: 600px;
+}
+
+progress {
+  vertical-align: middle;
+  width: 200px;
+}

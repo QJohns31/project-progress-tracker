@@ -1,0 +1,26 @@
+<h2>Project Overview</h2>
+
+<section class="card">
+  <p><strong>Project Name:</strong> {{ projectName }}</p>
+  <p><strong>Project Code:</strong> {{ projectCode }}</p>
+  <p><strong>Project Manager:</strong> {{ projectManager }}</p>
+  <p><strong>Start Date:</strong> {{ startDate }}</p>
+  <p><strong>Due Date:</strong> {{ dueDate }}</p>
+  <p><strong>Status:</strong> {{ status }}</p>
+
+  <!-- Property binding sets the progress bar value -->
+  <p>
+    <strong>Progress:</strong>
+    <progress [value]="percentComplete" max="100"></progress>
+    {{ percentComplete }}%
+  </p>
+
+  <!-- Event binding toggles the description -->
+  <button type="button" (click)="toggleDescription()">
+    {{ showDescription ? 'Hide' : 'Show' }} Description
+  </button>
+
+  @if (showDescription) {
+    <p>{{ description }}</p>
+  }
+</section>
