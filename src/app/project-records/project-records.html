@@ -1,0 +1,179 @@
+<h2>Project Records (MongoDB CRUD)</h2>
+
+<p class="intro">
+  Enter project information, save it to MongoDB, view all projects in the list,
+  and open any project to see its details.
+</p>
+
+<!-- Status messages -->
+@if (message()) {
+  <p class="alert success">{{ message() }}</p>
+}
+@if (errorMessage()) {
+  <p class="alert error">{{ errorMessage() }}</p>
+}
+
+<!-- CREATE / UPDATE: project record form -->
+<section class="card">
+  <h3>{{ editingId() ? 'Edit Project Record' : 'Add Project Record' }}</h3>
+
+  <form [formGroup]="recordForm" (ngSubmit)="onSubmit()" novalidate>
+    <div class="grid">
+
+      <div class="field">
+        <label for="projectCode">Project Code *</label>
+        <input id="projectCode" type="text" formControlName="projectCode" placeholder="e.g. PPT101">
+        @if (invalid('projectCode')) {
+          <small class="hint">Use 3–4 letters followed by 3 digits (e.g. PPT101).</small>
+        }
+      </div>
+
+      <div class="field">
+        <label for="projectName">Project Name *</label>
+        <input id="projectName" type="text" formControlName="projectName">
+        @if (invalid('projectName')) {
+          <small class="hint">Project name is required (at least 3 characters).</small>
+        }
+      </div>
+
+      <div class="field wide">
+        <label for="description">Description *</label>
+        <textarea id="description" rows="3" formControlName="description"></textarea>
+        @if (invalid('description')) {
+          <small class="hint">Description is required (at least 10 characters).</small>
+        }
+      </div>
+
+      <div class="field">
+        <label for="projectManager">Project Manager *</label>
+        <input id="projectManager" type="text" formControlName="projectManager">
+        @if (invalid('projectManager')) {
+          <small class="hint">Project manager is required.</small>
+        }
+      </div>
+
+      <div class="field">
+        <label for="priority">Priority *</label>
+        <select id="priority" formControlName="priority">
+          @for (p of priorities; track p) {
+            <option [value]="p">{{ p }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="startDate">Start Date *</label>
+        <input id="startDate" type="date" formControlName="startDate">
+        @if (invalid('startDate')) {
+          <small class="hint">Start date is required.</small>
+        }
+      </div>
+
+      <div class="field">
+        <label for="dueDate">Due Date *</label>
+        <input id="dueDate" type="date" formControlName="dueDate">
+        @if (invalid('dueDate')) {
+          <small class="hint">Due date is required.</small>
+        }
+        @if (recordForm.hasError('dueBeforeStart')) {
+          <small class="hint">Due date cannot be before the start date.</small>
+        }
+      </div>
+
+      <div class="field">
+        <label for="status">Status *</label>
+        <select id="status" formControlName="status">
+          @for (s of statuses; track s) {
+            <option [value]="s">{{ s }}</option>
+          }
+        </select>
+      </div>
+
+    </div>
+
+    <div class="actions">
+      <button type="submit" class="primary" [disabled]="recordForm.invalid">
+        {{ editingId() ? 'Update Project' : 'Save Project' }}
+      </button>
+      @if (editingId()) {
+        <button type="button" (click)="cancelEdit()">Cancel</button>
+      }
+    </div>
+  </form>
+</section>
+
+<!-- READ (one): project details -->
+@if (selectedRecord(); as record) {
+  <section class="card details">
+    <div class="details-head">
+      <h3>Project Details: {{ record.projectName }}</h3>
+      <button type="button" (click)="closeDetails()">Close</button>
+    </div>
+    <dl>
+      <dt>Project Code</dt><dd>{{ record.projectCode }}</dd>
+      <dt>Project Name</dt><dd>{{ record.projectName }}</dd>
+      <dt>Description</dt><dd>{{ record.description }}</dd>
+      <dt>Project Manager</dt><dd>{{ record.projectManager }}</dd>
+      <dt>Start Date</dt><dd>{{ record.startDate | date: 'mediumDate' : 'UTC' }}</dd>
+      <dt>Due Date</dt><dd>{{ record.dueDate | date: 'mediumDate' : 'UTC' }}</dd>
+      <dt>Status</dt><dd><span class="badge" [class]="'badge status-' + record.status.replace(' ', '-').toLowerCase()">{{ record.status }}</span></dd>
+      <dt>Priority</dt><dd><span class="badge" [class]="'badge priority-' + record.priority.toLowerCase()">{{ record.priority }}</span></dd>
+      <dt>Record ID</dt><dd class="mono">{{ record._id }}</dd>
+      @if (record.updatedAt) {
+        <dt>Last Updated</dt><dd>{{ record.updatedAt | date: 'medium' }}</dd>
+      }
+    </dl>
+  </section>
+}
+
+<!-- READ (all): project list -->
+<section class="card">
+  <h3>All Project Records ({{ records().length }})</h3>
+
+  @if (loading()) {
+    <p>Loading project records...</p>
+  } @else {
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Code</th>
+            <th>Project Name</th>
+            <th>Manager</th>
+            <th>Due Date</th>
+            <th>Status</th>
+            <th>Priority</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (record of records(); track record._id) {
+            <tr [class.editing]="editingId() === record._id">
+              <td>{{ record.projectCode }}</td>
+              <td>{{ record.projectName }}</td>
+              <td>{{ record.projectManager }}</td>
+              <td>{{ record.dueDate | date: 'mediumDate' : 'UTC' }}</td>
+              <td><span [class]="'badge status-' + record.status.replace(' ', '-').toLowerCase()">{{ record.status }}</span></td>
+              <td><span [class]="'badge priority-' + record.priority.toLowerCase()">{{ record.priority }}</span></td>
+              <td class="row-actions">
+                @if (pendingDeleteId() === record._id) {
+                  <span>Delete this project?</span>
+                  <button type="button" class="danger" (click)="confirmDelete(record)">Yes, Delete</button>
+                  <button type="button" (click)="cancelDelete()">No</button>
+                } @else {
+                  <button type="button" (click)="viewRecord(record._id)">View</button>
+                  <button type="button" (click)="startEdit(record)">Edit</button>
+                  <button type="button" class="danger" (click)="askDelete(record._id)">Delete</button>
+                }
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="7">No project records found. Add one using the form above.</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</section>

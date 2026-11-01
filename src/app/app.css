@@ -1,0 +1,14 @@
+.mongo-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: center;
+  padding: 8px 12px;
+  margin-bottom: 16px;
+  background: #e3f2fd;
+  border-radius: 6px;
+}
+
+.mongo-nav a.active {
+  font-weight: bold;
+}

@@ -1,5 +1,12 @@
 <h1>Project Progress Tracker</h1>
 
+<!-- Navigation to the MongoDB pages (shown in the routed area at the bottom) -->
+<nav class="mongo-nav">
+  <strong>MongoDB:</strong>
+  <a routerLink="/projects" routerLinkActive="active">Projects (Module 9 Demo)</a>
+  <a routerLink="/project-records" routerLinkActive="active">Project Records (Lab 5)</a>
+</nav>
+
 <app-project-overview></app-project-overview>
 
 <app-milestone-tracker></app-milestone-tracker>
@@ -10,6 +17,9 @@
 
 <app-project-task-manager></app-project-task-manager>
 
-<router-outlet></router-outlet>
-
 <app-milestone-api></app-milestone-api>
+
+<hr>
+
+<!-- Display routed Angular components -->
+<router-outlet></router-outlet>
